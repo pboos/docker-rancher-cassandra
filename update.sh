@@ -3,7 +3,7 @@ set -eo pipefail
 
 if [ "$(uname)" == "Darwin" ]; then
 	cd "$(dirname $0)"
-elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+else
 	cd "$(dirname "$(readlink -f "$BASH_SOURCE")")"
 fi
 
@@ -20,7 +20,7 @@ for version in "${versions[@]}"; do
 	packagesUrl="http://www.apache.org/dist/cassandra/debian/dists/${dist}x/main/binary-amd64/Packages.gz"
 	if [ "$(uname)" == "Darwin" ]; then
 		fullVersion="$(curl -fsSL "$packagesUrl" | gunzip | grep -m1 '^Version: ' | cut -d' ' -f2)"
-	elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+	else
 		fullVersion="$(curl -fsSL "$packagesUrl" | gunzip | grep -m1 -A10 "^Package: cassandra\$" | grep -m1 '^Version: ' | cut -d' ' -f2)"
 	fi
 
